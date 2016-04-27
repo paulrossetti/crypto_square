@@ -1,19 +1,44 @@
-//4 function total needed
-// var *object* = new *class*
+// create our Crypto class
+// it takes a string as an argument
 var Crypto = function(text) {
-	// stores the string for use elsewhere
-	this.message = text; 
+	this.text = text;
 };
 
-Crypto.prototype.normalizePlaintext = function(){
-	return this.message.replace(/[\W]/g, "").toLowerCase(); 
-// replace(/[^0-9a-zA-Z]/g, ''): replaces all characters that are not digits and alpha characters
+Crypto.prototype.normalizePlaintext = function() {
+	return this.text.replace(/[\W]/g, "").toLowerCase();
 };
-
 
 Crypto.prototype.size = function() {
 	var length = this.normalizePlaintext().length;
-	return Math.ceil (Math.sqrt(length));
-
+	return Math.ceil(Math.sqrt(length));
 };
-module.exports = Crypto;
+
+Crypto.prototype.plaintextSegments = function() {
+	var segments = [] ;
+		npt = this.normalizePlaintext(),
+		size = this.size();
+
+	for (var i = 0; i < npt.length; i += 1 ) {
+
+		segments.push(npt.substr(i, size));
+		
+	}
+	return segments;
+};
+
+Crypto.prototype.ciphertext = function() {
+	var ct = "";
+		size = this.size();
+		segs = this.plaintextSegments();
+
+	for (var  i = 0; i < size; i += 1) {
+		for (var j = 0; j < segs.length; j += 1) {
+			ct += segs[j].charAt(i);
+		}
+
+	}
+
+	return ct;
+};
+
+module.exports = Crypto
